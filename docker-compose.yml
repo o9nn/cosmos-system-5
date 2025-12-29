@@ -1,7 +1,14 @@
 version: '3.8'
 
+# System 5: Complete 18-Service [[D-T]-[P-O]-[S-M]] Architecture
+# C-S-A [3-6-9] Potential-Commitment-Performance Topology
+
 services:
-  # Cerebral Triad Services
+  # ============================================
+  # CEREBRAL TRIAD [3] - Executive Functions
+  # ============================================
+
+  # Potential Dimension [2-7]: Development → Treasury
   thought-service:
     build:
       context: .
@@ -13,6 +20,9 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3001
+      - TRIAD_TYPE=cerebral
+      - SERVICE_TYPE=T-7
+      - DIMENSION=[2-7]
     networks:
       - cognitive-network
 
@@ -27,12 +37,16 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3002
+      - TRIAD_TYPE=cerebral
+      - SERVICE_TYPE=PD-2
+      - DIMENSION=[2-7]
     depends_on:
       - thought-service
     networks:
       - cognitive-network
 
-  processing-service:
+  # Commitment Dimension [5-4]: Production → Organization
+  cerebral-processing:
     build:
       context: .
       dockerfile: Dockerfile
@@ -43,12 +57,15 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3003
+      - TRIAD_TYPE=cerebral
+      - SERVICE_TYPE=P-5
+      - DIMENSION=[5-4]
     depends_on:
       - processing-director
     networks:
       - cognitive-network
 
-  output-service:
+  cerebral-output:
     build:
       context: .
       dockerfile: Dockerfile
@@ -59,12 +76,294 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3004
+      - TRIAD_TYPE=cerebral
+      - SERVICE_TYPE=O-4
+      - DIMENSION=[5-4]
     depends_on:
-      - processing-service
+      - cerebral-processing
     networks:
       - cognitive-network
 
-  # Integration Hub Services
+  # Performance Dimension [8-1]: Sales → Market
+  cerebral-sales:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: cerebral-triad/sales-service
+    ports:
+      - "3005:3005"
+    environment:
+      - NODE_ENV=development
+      - PORT=3005
+      - TRIAD_TYPE=cerebral
+      - SERVICE_TYPE=S-8
+      - DIMENSION=[8-1]
+    depends_on:
+      - cerebral-output
+    networks:
+      - cognitive-network
+
+  cerebral-market:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: cerebral-triad/market-service
+    ports:
+      - "3006:3006"
+    environment:
+      - NODE_ENV=development
+      - PORT=3006
+      - TRIAD_TYPE=cerebral
+      - SERVICE_TYPE=M-1
+      - DIMENSION=[8-1]
+    depends_on:
+      - cerebral-sales
+    networks:
+      - cognitive-network
+
+  # ============================================
+  # SOMATIC TRIAD [6] - Motor/Behavioral Control
+  # ============================================
+
+  # Performance Dimension [8-1]: Sales → Market (Sensory → Motor)
+  motor-control:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: somatic-triad/motor-control-service
+    ports:
+      - "3011:3011"
+    environment:
+      - NODE_ENV=development
+      - PORT=3011
+      - TRIAD_TYPE=somatic
+      - SERVICE_TYPE=M-1
+      - DIMENSION=[8-1]
+    networks:
+      - cognitive-network
+
+  sensory:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: somatic-triad/sensory-service
+    ports:
+      - "3012:3012"
+    environment:
+      - NODE_ENV=development
+      - PORT=3012
+      - TRIAD_TYPE=somatic
+      - SERVICE_TYPE=S-8
+      - DIMENSION=[8-1]
+    networks:
+      - cognitive-network
+
+  # Commitment Dimension [5-4]: Production → Organization
+  somatic-processing:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: somatic-triad/processing-service
+    ports:
+      - "3013:3013"
+    environment:
+      - NODE_ENV=development
+      - PORT=3013
+      - TRIAD_TYPE=somatic
+      - SERVICE_TYPE=P-5
+      - DIMENSION=[5-4]
+    depends_on:
+      - sensory
+      - motor-control
+    networks:
+      - cognitive-network
+
+  somatic-output:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: somatic-triad/output-service
+    ports:
+      - "3014:3014"
+    environment:
+      - NODE_ENV=development
+      - PORT=3014
+      - TRIAD_TYPE=somatic
+      - SERVICE_TYPE=O-4
+      - DIMENSION=[5-4]
+    depends_on:
+      - somatic-processing
+    networks:
+      - cognitive-network
+
+  # Potential Dimension [2-7]: Development → Treasury (Shared Parasympathetic)
+  somatic-development:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: somatic-triad/development-service
+    ports:
+      - "3015:3015"
+    environment:
+      - NODE_ENV=development
+      - PORT=3015
+      - TRIAD_TYPE=somatic
+      - SERVICE_TYPE=PD-2
+      - DIMENSION=[2-7]
+      - SHARED_PARASYMPATHETIC=true
+    networks:
+      - cognitive-network
+
+  somatic-treasury:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: somatic-triad/treasury-service
+    ports:
+      - "3016:3016"
+    environment:
+      - NODE_ENV=development
+      - PORT=3016
+      - TRIAD_TYPE=somatic
+      - SERVICE_TYPE=T-7
+      - DIMENSION=[2-7]
+      - SHARED_PARASYMPATHETIC=true
+    depends_on:
+      - somatic-development
+    networks:
+      - cognitive-network
+
+  # ============================================
+  # AUTONOMIC TRIAD [9] - Background Processing
+  # ============================================
+
+  # Performance Dimension [8-1]: Sales → Market (State → Monitoring)
+  monitoring:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: autonomic-triad/monitoring-service
+    ports:
+      - "3021:3021"
+    environment:
+      - NODE_ENV=development
+      - PORT=3021
+      - TRIAD_TYPE=autonomic
+      - SERVICE_TYPE=M-1
+      - DIMENSION=[8-1]
+    networks:
+      - cognitive-network
+
+  state-management:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: autonomic-triad/state-management-service
+    ports:
+      - "3022:3022"
+    environment:
+      - NODE_ENV=development
+      - PORT=3022
+      - TRIAD_TYPE=autonomic
+      - SERVICE_TYPE=S-8
+      - DIMENSION=[8-1]
+    depends_on:
+      - monitoring
+    networks:
+      - cognitive-network
+
+  # Potential Dimension [2-7]: Development → Treasury
+  autonomic-director:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: autonomic-triad/process-director
+    ports:
+      - "3023:3023"
+    environment:
+      - NODE_ENV=development
+      - PORT=3023
+      - TRIAD_TYPE=autonomic
+      - SERVICE_TYPE=PD-2
+      - DIMENSION=[2-7]
+    depends_on:
+      - state-management
+    networks:
+      - cognitive-network
+
+  # Commitment Dimension [5-4]: Production → Organization
+  autonomic-processing:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: autonomic-triad/processing-service
+    ports:
+      - "3024:3024"
+    environment:
+      - NODE_ENV=development
+      - PORT=3024
+      - TRIAD_TYPE=autonomic
+      - SERVICE_TYPE=P-5
+      - DIMENSION=[5-4]
+    depends_on:
+      - autonomic-director
+    networks:
+      - cognitive-network
+
+  trigger:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: autonomic-triad/trigger-service
+    ports:
+      - "3025:3025"
+    environment:
+      - NODE_ENV=development
+      - PORT=3025
+      - TRIAD_TYPE=autonomic
+      - SERVICE_TYPE=T-7
+      - DIMENSION=[2-7]
+    depends_on:
+      - autonomic-processing
+    networks:
+      - cognitive-network
+
+  autonomic-organization:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: autonomic-triad/organization-service
+    ports:
+      - "3026:3026"
+    environment:
+      - NODE_ENV=development
+      - PORT=3026
+      - TRIAD_TYPE=autonomic
+      - SERVICE_TYPE=O-4
+      - DIMENSION=[5-4]
+    depends_on:
+      - autonomic-processing
+    networks:
+      - cognitive-network
+
+  # ============================================
+  # INTEGRATION HUB - Central Nervous System
+  # ============================================
+
   api-gateway:
     build:
       context: .
@@ -79,69 +378,22 @@ services:
     depends_on:
       - thought-service
       - processing-director
-      - processing-service
-      - output-service
-    networks:
-      - cognitive-network
-
-  # Event Bus (using Redis for now)
-  event-bus:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-    networks:
-      - cognitive-network
-
-  # Monitoring
-  prometheus:
-    image: prom/prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./deployment-configs/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
-    networks:
-      - cognitive-network
-
-  # ML Core Services - Advanced Features
-  predictive-engine:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        SERVICE_PATH: cognitive-core/ml-core/predictive-engine
-    ports:
-      - "3025:3025"
-    environment:
-      - NODE_ENV=development
-      - PORT=3025
-    networks:
-      - cognitive-network
-
-  pattern-analyzer:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        SERVICE_PATH: cognitive-core/ml-core/pattern-analyzer
-    ports:
-      - "3026:3026"
-    environment:
-      - NODE_ENV=development
-      - PORT=3026
-    networks:
-      - cognitive-network
-
-  adaptive-optimizer:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        SERVICE_PATH: cognitive-core/ml-core/adaptive-optimizer
-    ports:
-      - "3027:3027"
-    environment:
-      - NODE_ENV=development
-      - PORT=3027
+      - cerebral-processing
+      - cerebral-output
+      - cerebral-sales
+      - cerebral-market
+      - motor-control
+      - sensory
+      - somatic-processing
+      - somatic-output
+      - somatic-development
+      - somatic-treasury
+      - monitoring
+      - state-management
+      - autonomic-director
+      - autonomic-processing
+      - trigger
+      - autonomic-organization
     networks:
       - cognitive-network
 
@@ -156,6 +408,77 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3030
+    networks:
+      - cognitive-network
+
+  # ============================================
+  # INFRASTRUCTURE SERVICES
+  # ============================================
+
+  # Event Bus (Redis-based message queue)
+  event-bus:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - cognitive-network
+
+  # Monitoring (Prometheus)
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./deployment-configs/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    networks:
+      - cognitive-network
+
+  # ============================================
+  # ML CORE SERVICES - Advanced Features
+  # ============================================
+
+  predictive-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: cognitive-core/ml-core/predictive-engine
+    ports:
+      - "3031:3031"
+    environment:
+      - NODE_ENV=development
+      - PORT=3031
+    networks:
+      - cognitive-network
+
+  pattern-analyzer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: cognitive-core/ml-core/pattern-analyzer
+    ports:
+      - "3032:3032"
+    environment:
+      - NODE_ENV=development
+      - PORT=3032
+    networks:
+      - cognitive-network
+
+  adaptive-optimizer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: cognitive-core/ml-core/adaptive-optimizer
+    ports:
+      - "3033:3033"
+    environment:
+      - NODE_ENV=development
+      - PORT=3033
     networks:
       - cognitive-network
 
