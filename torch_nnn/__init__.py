@@ -54,6 +54,23 @@ from .matula import (
 )
 from .embedding2d import TreeEmbedding2D, System2D
 
+# OEIS sequence enumeration
+from .oeis import (
+    a000041,
+    a000055,
+    a000108,
+    oeis_table,
+    show_partitions,
+    show_rooted_trees,
+    show_free_trees,
+    show_catalan_trees,
+    show_relations,
+    partitions_of,
+    rooted_trees_with_nodes,
+    free_trees_with_nodes,
+    catalan_trees_with_leaves,
+)
+
 __version__ = "0.2.0"
 __all__ = [
     # 1D (Catalan)
@@ -84,4 +101,18 @@ __all__ = [
     "enumerate_matula_trees",
     "TreeEmbedding2D",
     "System2D",
+    # OEIS enumeration
+    "a000041",
+    "a000055",
+    "a000108",
+    "oeis_table",
+    "show_partitions",
+    "show_rooted_trees",
+    "show_free_trees",
+    "show_catalan_trees",
+    "show_relations",
+    "partitions_of",
+    "rooted_trees_with_nodes",
+    "free_trees_with_nodes",
+    "catalan_trees_with_leaves",
 ]
