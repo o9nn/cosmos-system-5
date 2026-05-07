@@ -443,9 +443,9 @@ Relations between A000041, A000055, A000081, A000108
    For a free tree that is «symmetric» (has a centroid edge), two
    rootings collapse, which is why A000055 is strictly smaller.
 
-   Example n=4:  A000081(4)=4, A000055(4)=2
-     Rooted:  ●(●,●,●)  ●(●,●(●))  ●(●(●(●)))  ●(●(●),●)
-     Free:    star K1,3 (one center + 3 leaves) and path P4
+   Example n=4 (4 nodes):  A000081(4)=4, A000055(4)=2
+     Rooted:  ●(●,●,●)  ●(●,●(●))  ●(●(●,●))  ●(●(●(●)))
+     Free:    star K1,3 (4 nodes total) and path P4
 
 2. ROOTED vs ORDERED TREES  (A000081 vs A000108)
    Ordered (plane) trees fix a left-to-right order on children.
