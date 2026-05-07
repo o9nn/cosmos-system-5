@@ -58,7 +58,7 @@ def a000041(n: int) -> int:
     """
     if n < 0:
         return 0
-    # Standard DP over parts 1..n
+    # standard DP over parts 1..n
     dp = [0] * (n + 1)
     dp[0] = 1
     for part in range(1, n + 1):
@@ -359,7 +359,7 @@ def oeis_table(max_n: int = 7) -> str:
       A000108(s)   Catalan / ordered trees
     """
     lines = [
-        "OEIS Sequences aligned to Systems s = 0 … {max_n}".format(max_n=max_n),
+        "OEIS Sequences aligned to Systems s = 0…{max_n}".format(max_n=max_n),
         "",
         "  s │ n │ A000041  │ A000055  │ A000081  │ A000108",
         "system│oeis│ partitions│ free trees│rooted trees│ Catalan",
