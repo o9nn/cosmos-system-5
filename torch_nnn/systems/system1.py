@@ -4,10 +4,12 @@ System 1: Atomic/Base Tensors - The Foundation of Nested Embeddings
 Mathematical Properties:
 -----------------------
 - Nesting Depth: 0 (no nesting)
+- NestingLevel: ATOM = 1
 - Catalan Number: C_0 = 1 (one structure)
-- Parentheses: ()
+- Rooted parentheses: [()]
 - Tree: Single leaf node
 - Partition: [1] (single box)
+- Matula number: 2 (one-child rooted tree)
 
 System 1 represents the base case - standard tensors without nesting.
 These are the "atoms" from which all higher systems are built.
@@ -101,6 +103,14 @@ class AtomicEmbedding:
     def to_parentheses(self) -> str:
         """Represent as empty parentheses (leaf)."""
         return "()"
+
+    def to_rooted_parentheses(self) -> str:
+        """
+        Represent using '[]' for root and '()' for inner nodes.
+
+        System 1 in rooted notation: "[()]"
+        """
+        return f"[{self.to_parentheses()}]"
 
     def flatten(self) -> List[Any]:
         """Flatten returns the atom itself."""
