@@ -353,7 +353,7 @@ def oeis_table(max_n: int = 7) -> str:
       n = s + 1 (shifted OEIS index)
 
     with column mapping:
-      A000041(s)   partitions
+      A000041(s)   partitions (deliberately system-indexed for alignment)
       A000055(n)   free trees
       A000081(n)   rooted trees
       A000108(s)   Catalan / ordered trees
@@ -445,7 +445,7 @@ Relations between A000041, A000055, A000081, A000108
 
    Example n=4:  A000081(4)=4, A000055(4)=2
      Rooted:  ●(●,●,●)  ●(●,●(●))  ●(●(●(●)))  ●(●(●),●)
-     Free:    star ●-●-●-●-●  and  path ●-●-●-●
+     Free:    star K1,3 (one center + 3 leaves) and path P4
 
 2. ROOTED vs ORDERED TREES  (A000081 vs A000108)
    Ordered (plane) trees fix a left-to-right order on children.
