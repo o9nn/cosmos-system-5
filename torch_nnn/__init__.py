@@ -35,7 +35,12 @@ The Matula number bijection: N⁺ ↔ Rooted Trees
 from .core import NestedTensor, NestingLevel
 from .trees import RootedTree, TreeNode
 from .ferrer import FerrerDiagram, Partition
-from .systems import System1, System2, System3
+from .systems import (
+    System0, VoidEmbedding,
+    System1, System2, System3,
+    System4, QuadEmbedding, Association4,
+    System5, QuintEmbedding, Association5,
+)
 
 # 2D Matula-indexed structures (unordered trees)
 from .matula import (
@@ -58,9 +63,17 @@ __all__ = [
     "TreeNode",
     "FerrerDiagram",
     "Partition",
+    "System0",
+    "VoidEmbedding",
     "System1",
     "System2",
     "System3",
+    "System4",
+    "QuadEmbedding",
+    "Association4",
+    "System5",
+    "QuintEmbedding",
+    "Association5",
     # 2D (Matula)
     "MatulaTree",
     "MatulaNode",

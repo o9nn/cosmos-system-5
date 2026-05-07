@@ -136,6 +136,14 @@ class PairEmbedding:
         """Represent as nested parentheses."""
         return f"({self.left.to_parentheses()}{self.right.to_parentheses()})"
 
+    def to_rooted_parentheses(self) -> str:
+        """
+        Represent using '[]' for root and '()' for inner nodes.
+
+        System 2 in rooted notation (symmetric pair): "[()()]"
+        """
+        return self.to_tree().to_rooted_parentheses()
+
     def map(self, f: Callable[[Any], Any]) -> 'PairEmbedding':
         """Apply function to both atoms' data."""
         return PairEmbedding(

@@ -213,6 +213,30 @@ class RootedTree:
         """Convert to Dyck word (balanced parentheses)."""
         return self.root.to_parentheses()
 
+    def to_rooted_parentheses(self) -> str:
+        """
+        Convert to rooted parentheses using '[]' for the root node.
+
+        Distinguishes the root node '[]' from inner tree nodes '()'.
+        System order = half the length of the inner string (excluding '[]').
+
+        Examples:
+        - System 0 (void):   "[]"
+        - System 1 (atom):   "[()]"
+        - System 2 (pair):   "[()()]"
+        - System 3 (triple): "[(())()]"   (assoc double)
+        - System 4 (quad):   "[(()())()]" (assoc triple)
+        """
+        if not self.root.children:
+            if self.root.value == "void":
+                # System 0: empty root
+                return "[]"
+            # Root is itself a single leaf/atom (System 1)
+            return f"[{self.root.to_parentheses()}]"
+        # General case: root has children; join their parentheses
+        inner = "".join(child.to_parentheses() for child in self.root.children)
+        return f"[{inner}]"
+
     def to_tuple(self) -> Any:
         """Convert to nested tuple."""
         return self.root.to_tuple()
@@ -265,7 +289,73 @@ class RootedTree:
 
         return cls(root=root)
 
-    def is_isomorphic(self, other: 'RootedTree') -> bool:
+    @classmethod
+    def from_rooted_parentheses(cls, s: str) -> 'RootedTree':
+        """
+        Construct tree from rooted parentheses string using '[]' for root.
+
+        The root is denoted by '[...]' and inner nodes by '(...)'.
+        System 0 is represented as '[]' (empty root).
+
+        Examples:
+        - "[]"          -> void root, no children (System 0)
+        - "[()]"        -> root with one leaf (System 1)
+        - "[()()]"      -> root with two leaves (System 2)
+        - "[(())()]"    -> root & assoc double (System 3)
+        - "[(()())()]"  -> root & assoc triple (System 4)
+        """
+        if len(s) < 2 or s[0] != '[' or s[-1] != ']':
+            raise ValueError("Rooted parentheses string must be wrapped in '[]'")
+
+        inner = s[1:-1]
+
+        if not inner:
+            # System 0: void root
+            return cls(root=TreeNode(value="void", children=[]))
+
+        def parse(s: str, pos: int) -> tuple[TreeNode, int]:
+            if pos >= len(s) or s[pos] != '(':
+                raise ValueError(f"Expected '(' at position {pos}")
+
+            pos += 1  # consume '('
+
+            if s[pos] == ')':
+                # Leaf: ()
+                return TreeNode(value="leaf", children=[]), pos + 1
+
+            # Internal node: collect children until ')'
+            children = []
+            while pos < len(s) and s[pos] != ')':
+                child, pos = parse(s, pos)
+                children.append(child)
+
+            if pos >= len(s) or s[pos] != ')':
+                raise ValueError(f"Expected ')' at position {pos}")
+
+            return TreeNode(value="node", children=children), pos + 1
+
+        # Parse all top-level children of the root
+        children = []
+        pos = 0
+        while pos < len(inner):
+            child, pos = parse(inner, pos)
+            children.append(child)
+
+        root = TreeNode(value="root", children=children)
+        return cls(root=root)
+
+    def system_order(self) -> int:
+        """
+        Return the system order = half the length of the inner parentheses string.
+
+        Equivalent to the number of nodes in the tree (excluding root).
+        """
+        inner = self.to_rooted_parentheses()
+        # Strip the outer '[' and ']'
+        inner_str = inner[1:-1]
+        return len(inner_str) // 2
+
+
         """Check if two trees have the same shape (ignoring values)."""
         def same_shape(n1: TreeNode, n2: TreeNode) -> bool:
             if n1.arity != n2.arity:

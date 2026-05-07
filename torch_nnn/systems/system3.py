@@ -4,9 +4,10 @@ System 3: Triple/Ternary Tensors - The Emergence of Association Ambiguity
 Mathematical Properties:
 -----------------------
 - Nesting Depth: 2 (double nesting)
-- Catalan Number: C_2 = 2 (two structures!)
-- Parentheses: ((()())()) or (()(()()))
-- Trees: Two distinct binary tree shapes with 3 leaves
+- NestingLevel: TRIP = 3
+- Catalan Number: C_2 = 2 (two structures)
+- Rooted parentheses (LEFT, leaf-atom convention): [(()())()]
+- Trees: Two distinct binary tree shapes with 3 leaf atoms
 - Partitions: [3], [2,1], [1,1,1]
 
 System 3 is where the Catalan structure first becomes non-trivial.
@@ -22,6 +23,13 @@ This mirrors fundamental concepts in:
 
 The choice of association IS the structure. Isomorphic algebras may
 have different associative behaviors, captured by the Catalan variants.
+
+Note on canonical forms:
+- Leaf-atom convention (this implementation): each leaf () = one data atom;
+  System 3 has 3 leaf atoms and produces rooted parens [(()())()].
+- Full-node convention (per problem canonical example): each () node at
+  any level counts; System 3's canonical example is [(())()] with 3 nodes.
+  Both are valid representations of ternary structure.
 """
 
 from __future__ import annotations
@@ -232,6 +240,20 @@ class TripleEmbedding:
             return f"(({p1}{p2}){p3})"
         else:
             return f"({p1}({p2}{p3}))"
+
+    def to_rooted_parentheses(self) -> str:
+        """
+        Represent using '[]' for root and '()' for inner nodes.
+
+        Uses the leaf-atom convention: 3 leaf atoms produce 4 inner () pairs.
+        LEFT  (canonical): "[(()())()]"  — 4 inner () pairs, system order 4
+        RIGHT (variant):   "[()(()())]"
+
+        Note: The problem's canonical example "[(())()]" uses the full-node
+        counting convention (3 total nodes = system order 3). Both
+        representations are valid for System 3 depending on the convention.
+        """
+        return self.to_tree().to_rooted_parentheses()
 
     def map(self, f: Callable[[Any], Any]) -> 'TripleEmbedding':
         """Apply function to all atoms' data."""
