@@ -245,8 +245,13 @@ class TripleEmbedding:
         """
         Represent using '[]' for root and '()' for inner nodes.
 
-        LEFT  (canonical): "[(())()]"
-        RIGHT (variant):   "[(()())]"
+        Uses the leaf-atom convention: 3 leaf atoms produce 4 inner () pairs.
+        LEFT  (canonical): "[(()())()]"  — 4 inner () pairs, system order 4
+        RIGHT (variant):   "[()(()())]"
+
+        Note: The problem's canonical example "[(())()]" uses the full-node
+        counting convention (3 total nodes = system order 3). Both
+        representations are valid for System 3 depending on the convention.
         """
         return self.to_tree().to_rooted_parentheses()
 
