@@ -2,7 +2,8 @@
 OEIS Sequence Enumeration: A000041, A000055, A000081, A000108
 
 Shows the relations between four fundamental combinatorial sequences
-for n < 8, each counting a distinct class of tree/partition structure:
+for System index s < 8, each counting a distinct class of tree/partition
+structure:
 
   A000041(n)  = number of integer partitions of n
   A000055(n)  = number of free (unrooted, unordered) trees with n nodes
@@ -10,18 +11,17 @@ for n < 8, each counting a distinct class of tree/partition structure:
   A000108(n)  = n-th Catalan number = number of ordered binary trees
                 with n internal nodes (= n+1 leaves)
 
-Correspondence at a glance (n = number of nodes / edges / parts
-  depending on context — see each section for the precise indexing):
+Correspondence at a glance (System s with shifted OEIS index n=s+1):
 
-  n   A000041  A000055  A000081  A000108
-  0      1        1        0        1
-  1      1        1        1        1
-  2      2        1        1        2
-  3      3        1        2        5
-  4      5        2        4       14
-  5      7        3        9       42
-  6     11        6       20      132
-  7     15       11       48      429
+  s   n   A000041  A000055  A000081  A000108
+  0   1      1        1        1        1
+  1   2      1        1        1        1
+  2   3      2        1        2        2
+  3   4      3        2        4        5
+  4   5      5        3        9       14
+  5   6      7        6       20       42
+  6   7     11       11       48      132
+  7   8     15       23      115      429
 
 Why these four sequences are related
 -------------------------------------
@@ -346,28 +346,32 @@ def _canonical_rooted(adj: List[List[int]], node: int, par: int) -> Tuple:
 
 def oeis_table(max_n: int = 7) -> str:
     """
-    Return a formatted table of A000041, A000055, A000081, A000108 for n ≤ max_n.
+    Return a formatted System-aligned correspondence table.
 
-    The indexing used here is «n = number of nodes» for tree sequences
-    (A000055, A000081) and «n = number to partition» for A000041, while
-    A000108(n) is the n-th Catalan number (ordered trees with n+1 leaves).
+    Uses:
+      s = System index (0..max_n)
+      n = s + 1 (shifted OEIS index)
 
-    This choice makes all four sequences share a common n so the table
-    is directly comparable.
+    with column mapping:
+      A000041(s)   partitions
+      A000055(n)   free trees
+      A000081(n)   rooted trees
+      A000108(s)   Catalan / ordered trees
     """
     lines = [
-        "OEIS Sequences for n = 0 … {max_n}".format(max_n=max_n),
+        "OEIS Sequences aligned to Systems s = 0 … {max_n}".format(max_n=max_n),
         "",
-        "  n │ A000041  │ A000055  │ A000081  │ A000108",
-        "    │ partitions│ free trees│rooted trees│ Catalan",
-        "────┼──────────┼──────────┼──────────┼──────────",
+        "  s │ n │ A000041  │ A000055  │ A000081  │ A000108",
+        "system│oeis│ partitions│ free trees│rooted trees│ Catalan",
+        "────┼───┼──────────┼──────────┼──────────┼──────────",
     ]
-    for n in range(max_n + 1):
-        p = a000041(n)
+    for s in range(max_n + 1):
+        n = s + 1
+        p = a000041(s)
         f = a000055(n)
         r = a000081(n)
-        c = a000108(n)
-        lines.append(f"  {n} │  {p:>6}  │  {f:>6}  │  {r:>6}  │  {c:>6}")
+        c = a000108(s)
+        lines.append(f"  {s} │ {n:>1} │  {p:>6}  │  {f:>6}  │  {r:>6}  │  {c:>6}")
     return "\n".join(lines)
 
 
@@ -477,13 +481,13 @@ Inequalities (for n ≥ 2):
 # ---------------------------------------------------------------------------
 
 def main():
-    """Print a complete enumeration for n < 8."""
+    """Print a complete enumeration for System index s < 8."""
     sep = "\n" + "─" * 60 + "\n"
 
     print("\n" + "═" * 60)
     print("  OEIS Enumeration: A000041 · A000055 · A000081 · A000108")
     print("  Partitions · Free Trees · Rooted Trees · Catalan Trees")
-    print("  for n = 0 … 7")
+    print("  for System s = 0 … 7 (with OEIS n = s+1 alignment)")
     print("═" * 60)
 
     print(sep)
